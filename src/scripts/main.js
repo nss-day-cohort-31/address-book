@@ -1,29 +1,4 @@
-const container = document.querySelector("#addressList");
-
-const listAddressOnDom = addressArray => {
-  container.innerHTML = "";
-  // debugger
-  addressArray.forEach(element => {
-    container.innerHTML += `
-        <section>
-            <h1>${element.name}</h1>
-            <div>${element.address}</div>
-        </section>
-    `;
-  });
-};
-
-fetch("http://localhost:8088/addresses")
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(parsedResponse) {
-    return listAddressOnDom(parsedResponse);
-  });
-
-fetch("http://localhost:8088/addresses")
-  .then(response => response.json())
-  .then(parsedResponse => listAddressOnDom(parsedResponse));
+getAddresses().then(parsedResponse => listAddressOnDom(parsedResponse));
 
 document.querySelector("#saveEntry").addEventListener("click", event => {
   /*
@@ -37,13 +12,9 @@ document.querySelector("#saveEntry").addEventListener("click", event => {
     name: personName,
     address: personAddress
   };
-  // debugger
-  fetch("http://localhost:8088/addresses", {
-    method: "POST",
-    body: JSON.stringify(newAddressBookEntry),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  });
-  // listAddressOnDom()
+
+  postAddress(newAddressBookEntry)
+  .then(() => getAddresses())
+  .then(parsedResponse => listAddressOnDom(parsedResponse));
+
 });
